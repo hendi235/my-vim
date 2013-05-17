@@ -2,178 +2,365 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
-behave mswin
-
-" use pathogen plugin for easy plugin administration
-" these pathogen lines must be the first to run in .vimrc
-"let g:bufExplorerShowTabBuffer=1        " show buffers on for the specific tab
-"call pathogen#infect()
-filetype off
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
-
-set diffexpr=MyDiff()
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let eq = ''
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      let cmd = '""' . $VIMRUNTIME . '\diff"'
-      let eq = '"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+" Windows Compatible {
+    " On Windows, also use '.vim' instead of 'vimfiles'; this makes synchronization
+    " across (heterogeneous) systems easier.
+    if has('win32') || has('win64')
+      set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
     endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-endfunction
+" }
+
+    " Setup Bundle Support {
+        " The next three lines ensure that the ~/.vim/bundle/ system works
+        filetype on
+        filetype off
+        set rtp+=~/.vim/bundle/vundle
+        call vundle#rc()
+
+" let Vundle manage Vundle. required! 
+Bundle 'gmarik/vundle'
+    " }
 
 
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-  set mouse=a
-endif
+" Bundles {
+"Bundle 'tpope/vim-fugitive'
+Bundle 'kien/ctrlp'
+" }
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
+" General {
 
-" Set global color theme
-"-- zenburn --
-let g:zenburn_high_Contrast=1
-colors zenburn
+    if !has('gui')
+        "set term=$TERM          " Make arrow and other keys work
+    endif
+
+    filetype plugin indent on   " Automatically detect file types.
+    syntax on                   " Syntax highlighting
+    set mouse=a                 " Automatically enable mouse usage
+    set mousehide               " Hide the mouse cursor while typing
+    scriptencoding utf-8
+
+    if has ('x') && has ('gui') " On Linux use + register for copy-paste
+        set clipboard=unnamedplus
+    elseif has ('gui')          " On mac and Windows, use * register for copy-paste
+        set clipboard=unnamed
+    endif
+
+    "set autowrite                       " Automatically write a file when leaving a modified buffer
+    set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
+    set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
+    set virtualedit=onemore             " Allow for cursor beyond last character
+    set history=100                    " Store a ton of history (default is 20)
+"    set spell                           " Spell checking on
+    set hidden                          " Allow buffer switching without saving
+
+    " Setting up the directories {
+        set backup                  " Backups are nice ...
+        if has('persistent_undo')
+            set undofile                " So is persistent undo ...
+            set undolevels=1000         " Maximum number of changes that can be undone
+            set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+        endif
+    " }
+" }
+
+" Vim UI {
+
+    set background=dark         " Assume a dark background 
+
+    if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+        let g:solarized_termcolors=256
+        color solarized                 " Load a colorscheme
+        let g:solarized_termtrans=1
+        let g:solarized_contrast="high"
+        let g:solarized_visibility="high
+    else
+        let g:zenburn_high_Contrast=1
+        colors zenburn
+    endif
+   
+    set tabpagemax=15               " Only show 15 tabs
+    set showmode                    " Display the current mode
+    set cursorline                  " Highlight current line
+
+"    highlight clear SignColumn      " SignColumn should match background for
+                                    " things like vim-gitgutter
+
+    if has('cmdline_info')
+        set ruler                   " Show the ruler
+        set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
+        set showcmd                 " Show partial commands in status line and
+                                    " Selected characters/lines in visual mode
+    endif
+
+    if has('statusline')
+        set laststatus=2
+
+        " Broken down into easily includeable segments
+        set statusline=%<%f\                     " Filename
+        set statusline+=%w%h%m%r                 " Options
+        set statusline+=%{fugitive#statusline()} " Git Hotness
+        set statusline+=\ [%{&ff}/%Y]            " Filetype
+        set statusline+=\ [%{getcwd()}]          " Current dir
+        set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+    endif
+
+    " allow backspacing over everything in insert mode
+    set backspace=indent,eol,start  " Backspace for dummies
+
+    set linespace=0                 " No extra spaces between rows
+    set nu                          " Line numbers on
+    set showmatch                   " Show matching brackets/parenthesis
+    set incsearch                   " Find as you type search
+    set hlsearch                    " Highlight search terms
+    set winminheight=0              " Windows can be 0 line high
+    set ignorecase                  " Case insensitive search
+    set smartcase                   " Case sensitive when uc present
+    set wildmenu                    " Show list instead of just completing
+    set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
+    set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
+    set scrolljump=5                " Lines to scroll when cursor leaves screen
+    set scrolloff=3                 " Minimum lines to keep above and below cursor
+    set foldenable                  " Auto fold code
+    set list
+"    set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
+
+    " Syntax coloring lines that are too long just slows down the world
+    set synmaxcol=2048
+
+    " disable virtual bell
+    set vb t_vb="
+" }
+
+" Formatting {
+
+    set nowrap                      " Wrap long lines
+"    set autoindent                  " Indent at the same level of the previous line
+    set smartindent
+    set shiftwidth=4                " Use indents of 4 spaces
+    set expandtab                   " Tabs are spaces, not tabs
+    set tabstop=4                   " An indentation every four columns
+    set softtabstop=4               " Let backspace delete indent
+    "set matchpairs+=<:>             " Match, to be used with %
+    set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
+    "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
+ 
+" }
+
+" Key (re)Mappings {
+
+    " The default leader is '\', but many people prefer ',' 
+        let mapleader = ','
+
+    " Easier moving in tabs and windows
+    " The lines conflict with the default digraph mapping of <C-K>
+        map <C-J> <C-W>j<C-W>_
+        map <C-K> <C-W>k<C-W>_
+        map <C-L> <C-W>l<C-W>_
+        map <C-H> <C-W>h<C-W>_
+
+    " Wrapped lines goes down/up to next row, rather than next line in file.
+    nnoremap j gj
+    nnoremap k gk
+
+    " Stupid shift key fixes
+"        if has("user_commands")
+"            command! -bang -nargs=* -complete=file E e<bang> <args>
+"            command! -bang -nargs=* -complete=file W w<bang> <args>
+"            command! -bang -nargs=* -complete=file Wq wq<bang> <args>
+"            command! -bang -nargs=* -complete=file WQ wq<bang> <args>
+"            command! -bang Wa wa<bang>
+"            command! -bang WA wa<bang>
+"            command! -bang Q q<bang>
+"            command! -bang QA qa<bang>
+"            command! -bang Qa qa<bang>
+"        endif
+
+    " Yank from the cursor to the end of the line, to be consistent with C and D.
+    nnoremap Y y$
+
+    " Code folding options
+    nmap <leader>f0 :set foldlevel=0<CR>
+    nmap <leader>f1 :set foldlevel=1<CR>
+    nmap <leader>f2 :set foldlevel=2<CR>
+    nmap <leader>f3 :set foldlevel=3<CR>
+    nmap <leader>f4 :set foldlevel=4<CR>
+    nmap <leader>f5 :set foldlevel=5<CR>
+    nmap <leader>f6 :set foldlevel=6<CR>
+    nmap <leader>f7 :set foldlevel=7<CR>
+    nmap <leader>f8 :set foldlevel=8<CR>
+    nmap <leader>f9 :set foldlevel=9<CR>
+
+    " Toggle search highlighting
+    nmap <silent> <leader>/ :set invhlsearch<CR>
+
+    " Shortcuts
+    " Change Working Directory to that of the current file
+    cmap cwd lcd %:p:h
+    cmap cd. lcd %:p:h
+
+    " Visual shifting (does not exit Visual mode)
+    vnoremap < <gv
+    vnoremap > >gv
+
+    " Fix home and end keybindings for screen, particularly on mac
+    " - for some reason this fixes the arrow keys too. huh.
+    map [F $
+    imap [F $
+    map [H g0
+    imap [H g0
+
+    " Some helpers to edit mode
+    " http://vimcasts.org/e/14
+"    cnoremap %% <C-R>=expand('%:h').'/'<cr>
+"    map <leader>ew :e %%
+"    map <leader>es :sp %%
+"    map <leader>ev :vsp %%
+"    map <leader>et :tabe %%
+
+    " Adjust viewports to the same size
+"    map <Leader>= <C-w>=
+
+    " scroll viewport faster
+    nnoremap <C-e> 3<C-e>
+    nnoremap <C-y> 3<C-y
+
+    " Map <Leader>ff to display all lines with keyword under cursor
+    " and ask which one to jump to
+    nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+
+    " Easier horizontal scrolling
+    map zl zL
+    map zh zH
+
+" }
+
+" Plugins {
+
+    ctrlp {
+        let g:ctrlp_working_path_mode = 2
+        nmap <C-p> :CtrlP<CR>
+"        nnoremap <silent> <D-t> :CtrlP<CR>
+"        nnoremap <silent> <D-r> :CtrlPMRU<CR>
+"        let g:ctrlp_custom_ignore = {
+"            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
+"            \ 'file': '\.exe$\|\.so$\|\.dll$' }
 "
-"-- inkpot --
-"let g:inkpot_black_background = 1
-"colors inkpot
-
-" Set global font
-set guifont=consolas:h11:cDEFAULT
-
-" Set toolbar to hidden --> gvim specific
-set guioptions-=T
-
-" display horizontal scrollbar at bottom
-set guioptions+=b
-
-" try to start gVim in full window size
-au GUIEnter * simalt ~x
-
-" Set initial windows size (column and lines)
-"set lines=50
-"set columns=120
-
-"Disable virtual bell
-set vb t_vb="
-
-"Make backspace work
-set backspace=2
-
-" keep xx lines of command line history
-set history=100
-
-" show the cursor position all the time
-set ruler
-
-" display incomplete commands
-set showcmd
-
-" do incremental searching
-set incsearch
-
-" ignore case in searching
-set ignorecase
-
-" case-sensitive search if searchword contains uppercase letter
-set smartcase
-
-set smartindent
-
-" show line number
-set nu
-
-" no annoying word wrapping
-set textwidth=0
-
-" don't wrap at end of window
-set nowrap
-
-set tabstop=2
-
-set shiftwidth=2
-
-" convert TAB into spaces 
-set expandtab
-
-" autoset syntax highlight according to filetype
-filetype on
-
-filetype plugin on
-
-" allow vim to manage multiple buffers effectively
-set hidden
-
-" command completion only up to the point of ambiguity (while still showing you what your options are)
-set wildmenu 
-set wildmode=list:longest
-
-" more scrolling when cursor goes out of window
-set scrolloff=3
-
-" scroll viewport faster
-nnoremap <C-e> 3<C-e>
-nnoremap <C-y> 3<C-y>
-
-" allow backspacing over everything in insert mode
-set bs=indent,eol,start
-
-" Syntax coloring lines that are too long just slows down the world
-set synmaxcol=2048
+"        let g:ctrlp_user_command = {
+"            \ 'types': {
+"                \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+"                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+"            \ },
+"            \ 'fallback': 'find %s -type f'
+"        \ }
+    }
 
 
-" =============================== 
-" Remapping key start from here 
-" ===============================
-" Toggle fullscreen mode with plugin gvimfullscreen (http://www.vim.org/scripts/script.php?script_id=2596)
-"nmap <silent> <F3> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+    " UndoTree {
+"        nnoremap <Leader>u :UndotreeToggle<CR>
+        " If undotree is opened, it is likely one wants to interact with it.
+"        let g:undotree_SetFocusWhenToggle=1
+    " }
+" }
 
-" change <leader> key to 'comma', easier to reach
-let mapleader = ","
+" GUI Settings {
 
-" easy window movement using Ctr + <movementkey>
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap <C-h> <C-w>h
-nnoremap <C-up> <C-w>j
-nnoremap <C-down> <C-w>k
-nnoremap <C-right> <C-w>l
-nnoremap <C-left> <C-w>h
+    " GVIM- (here instead of .gvimrc)
+    if has('gui_running')
+        set guioptions-=T           " Remove the toolbar
 
-" Toggle BufferExplorer
-nmap <leader>b :BufExplorer<CR>
+        " display horizontal scrollbar at bottom
+        set guioptions+=b
 
-" Toggle NERD-Tree with F7
-nmap <F7> :NERDTreeToggle<CR>
-"map <leader>nt :NERDTreeToggle<CR>
+        set lines=40                " 40 lines of text instead of 24
+        if has("gui_gtk2")
+            set guifont=Andale\ Mono\ Regular\ 16,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
+        elseif has("gui_mac")
+            set guifont=Andale\ Mono\ Regular:h16,Menlo\ Regular:h15,Consolas\ Regular:h16,Courier\ New\ Regular:h18
+        elseif has("gui_win32")
+            "set guifont=Andale_Mono:h10,Menlo:h10,Consolas:h11,Courier_New:h10
+            set guifont=consolas:h11:cDEFAULT
+        endif
 
-" start Ack
-nmap <leader>a <Esc>:Ack!
+        if has('gui_macvim')
+            set transparency=5      " Make the window slightly transparent
+        endif
+        
+        " try to start gVim in full window size
+        au GUIEnter * simalt ~x
+    else
+        if &term == 'xterm' || &term == 'screen'
+            set t_Co=256            " Enable 256 colors to stop the CSApprox warning and make xterm vim shine
+        endif
+        "set term=builtin_ansi       " Make arrow and other keys work
+    endif
 
-" start ctrlp (see http://kien.github.com/ctrlp.vim/)
-nmap <leader>ct :CtrlP<CR>
+" }
+
+" Functions {
+
+    " Initialize directories {
+    function! InitializeDirectories()
+        let parent = $HOME
+        let prefix = 'vim'
+        let dir_list = {
+                    \ 'backup': 'backupdir',
+                    \ 'views': 'viewdir',
+                    \ 'swap': 'directory' }
+
+        if has('persistent_undo')
+            let dir_list['undo'] = 'undodir'
+        endif
+
+        " To specify a different directory in which to place the vimbackup,
+        " vimviews, vimundo, and vimswap files/directories, add the following to
+        " your .vimrc.local file:
+        "   let g:spf13_consolidated_directory = <full path to desired directory>
+        "   eg: let g:spf13_consolidated_directory = $HOME . '/.vim/'
+        if exists('g:spf13_consolidated_directory')
+            let common_dir = g:spf13_consolidated_directory . prefix
+        else
+            let common_dir = parent . '/.' . prefix
+        endif
+
+        for [dirname, settingname] in items(dir_list)
+            let directory = common_dir . dirname . '/'
+            if exists("*mkdir")
+                if !isdirectory(directory)
+                    call mkdir(directory)
+                endif
+            endif
+            if !isdirectory(directory)
+                echo "Warning: Unable to create backup directory: " . directory
+                echo "Try: mkdir -p " . directory
+            else
+                let directory = substitute(directory, " ", "\\\\ ", "g")
+                exec "set " . settingname . "=" . directory
+            endif
+        endfor
+    endfunction
+    " }
+
+    " Strip whitespace {
+    function! StripTrailingWhitespace()
+        " To disable the stripping of whitespace, add the following to your
+        " .vimrc.local file:
+        "   let g:spf13_keep_trailing_whitespace = 1
+        if !exists('g:spf13_keep_trailing_whitespace')
+            " Preparation: save last search, and cursor position.
+            let _s=@/
+            let l = line(".")
+            let c = col(".")
+            " do the business:
+            %s/\s\+$//e
+            " clean up: restore previous search history, and cursor position
+            let @/=_s
+            call cursor(l, c)
+        endif
+    endfunction
+    " }
+
+" }
+
+" Finish local initializations {
+"    call InitializeDirectories()
+" }
