@@ -28,6 +28,7 @@ Bundle 'gmarik/vundle'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'kien/ctrlp.vim'
 Bundle 'jwhitley/vim-matchit'
+Bundle 'hendi235/vim-syntax'
 
 filetype plugin indent on     " required!
 " ----- vundle END -----
