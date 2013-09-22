@@ -6,13 +6,20 @@ source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
 behave mswin
 
+" On Windows, also use '.vim' instead of 'vimfiles'; this makes
+" synchronization across (heterogeneous) systems easier.
+if has('win32')
+    set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+endif
 
 " Use vundle for easy plugin administration
 " ----- vundle START -----
 filetype off  " required!
 
 if has("gui_running") 
-" gvim portable
+" If you want gvim portable as well vundle to load from vimfiles,
+" then you've to edit the $HOME in bundle/vundle/autoload/vundle.vim, too.
+" I won't bother, let it managed by default in .vim folder.
   set rtp+=%HOME%/.vim/bundle/vundle/
 else
   set rtp+=~/.vim/bundle/vundle/
@@ -82,7 +89,7 @@ endif
 "colors inkpot
 "
 "-- solarized --
-"let g:solarized_contrast="normal"
+let g:solarized_contrast="normal"
 colorscheme solarized
 
 " Set global font
@@ -170,7 +177,7 @@ set bs=indent,eol,start
 set synmaxcol=2048
 
 " Enable matchit macro
-runtime macros/matchit.vim
+"runtime macros/matchit.vim    "but now we use vundle to cleanly manage matchit
 
 " =============================== 
 " Remapping key start from here 
