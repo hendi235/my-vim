@@ -11,12 +11,12 @@ behave mswin
 " ----- vundle START -----
 filetype off  " required!
 
-"if has("gui_running") 
+if has("gui_running") 
 " gvim portable
-"  set rtp+=$HOME/vimfiles/bundle/vundle/
-"else
+  set rtp+=%HOME%/.vim/bundle/vundle/
+else
   set rtp+=~/.vim/bundle/vundle/
-"endif
+endif
 
 call vundle#rc()
 
@@ -32,15 +32,6 @@ Bundle 'jwhitley/vim-matchit'
 filetype plugin indent on     " required!
 " ----- vundle END -----
 
-" ----- use pathogen plugin for easy plugin administration -----
-" these pathogen lines must be the first to run in .vimrc
-" OBSOLETE. Now I use Vundle instead.
-"let g:bufExplorerShowTabBuffer=1        " show buffers on for the specific tab
-"call pathogen#infect()
-"filetype off
-"call pathogen#runtime_append_all_bundles()
-"call pathogen#helptags()
-" ----- pathogen END -----
 
 set diffexpr=MyDiff()
 function MyDiff()
