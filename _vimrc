@@ -19,7 +19,7 @@ filetype off  " required!
 if has("gui_running") 
 " If you want gvim portable as well vundle to load from vimfiles,
 " then you've to edit the $HOME in bundle/vundle/autoload/vundle.vim, too.
-" I won't bother, let it managed by default in .vim folder.
+" I won't bother, so let it managed by default in .vim folder.
   set rtp+=%HOME%/.vim/bundle/vundle/
 else
   set rtp+=~/.vim/bundle/vundle/
@@ -31,13 +31,14 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " My bundles start here
-
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'kien/ctrlp.vim'
 Bundle 'jwhitley/vim-matchit'
-Bundle 'hendi235/vim-syntax'
+Bundle 'hendi235/vim-flex'
+Bundle 'jnurmine/Zenburn'
 
-filetype plugin indent on     " required!
+filetype plugin on    " required!
+filetype indent on    " required!
 " ----- vundle END -----
 
 
