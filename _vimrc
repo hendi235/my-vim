@@ -33,6 +33,9 @@ Bundle 'gmarik/vundle'
 " My bundles start here
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'kien/ctrlp.vim'
+" minibufexplorer is more pleasant, use it!
+Bundle 'fholgado/minibufexpl.vim'
+"Bundle 'corntrace/bufexplorer'
 Bundle 'jwhitley/vim-matchit'
 Bundle 'hendi235/vim-flex'
 Bundle 'jnurmine/Zenburn'
@@ -210,8 +213,14 @@ nmap <F7> :NERDTreeToggle<CR>
 " start Ack
 nmap <leader>a <Esc>:Ack!
 
-" start ctrlp (see http://kien.github.com/ctrlp.vim/)
+" ctrlP{
+" start ctrlP (see http://kien.github.com/ctrlp.vim/)
 nmap <leader>ct :CtrlP<CR>
-
+" start ctrlP with word under cursor
+nn <silent> <leader>d :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
+" another method of start with word under cursor. Let's see between the two. But don't activate both !
+"nmap <leader>lw :CtrlP<CR><C-\>w
+"}
+"
 " toggle background mode
 call togglebg#map("<F5>")
