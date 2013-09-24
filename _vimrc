@@ -197,17 +197,17 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
-nnoremap <C-h> <C-w>h
-nnoremap <C-up> <C-w>j
-nnoremap <C-down> <C-w>k
+nnoremap <C-up> <C-w>k
+nnoremap <C-down> <C-w>j
 nnoremap <C-right> <C-w>l
 nnoremap <C-left> <C-w>h
 
 " Toggle BufferExplorer
-nmap <leader>b :BufExplorer<CR>
+"nmap <leader>b :BufExplorer<CR>
 
 " Toggle NERD-Tree with F7
-nmap <F7> :NERDTreeToggle<CR>
+"nmap <F7> :NERDTreeToggle<CR>
+" or use this, but not both!
 "map <leader>nt :NERDTreeToggle<CR>
 
 " start Ack
@@ -216,11 +216,29 @@ nmap <leader>a <Esc>:Ack!
 " ctrlP{
 " start ctrlP (see http://kien.github.com/ctrlp.vim/)
 nmap <leader>ct :CtrlP<CR>
-" start ctrlP with word under cursor
-nn <silent> <leader>d :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
-" another method of start with word under cursor. Let's see between the two. But don't activate both !
-"nmap <leader>lw :CtrlP<CR><C-\>w
+
+" ctrlP with word under cursor
+nn <silent> <leader>c :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
+
+" another method of ctrlP with word under cursor. Let's see between the two. But don't activate both !
+"nmap <leader>dd :CtrlP<CR><C-\>w
+
+" ctrlP with selected word
+vmap <leader>cw :CtrlP<CR><C-\>c
 "}
-"
+
+" MiniBufExplorer{
+  map <Leader>mbt :MBEToggle<cr>
+
+  " swich forward buffer(s) in current window
+  noremap <C-TAB>   :MBEbf<CR>
+  
+  " switch backwad buffer
+  noremap <C-S-TAB> :MBEbb<CR>
+
+  " delete current buffer
+  nmap <leader>md :MBEbd<CR>
+"}
+
 " toggle background mode
 call togglebg#map("<F5>")
