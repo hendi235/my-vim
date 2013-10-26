@@ -207,25 +207,25 @@ nnoremap <C-left> <C-w>h
 " or use this, but not both!
 "map <leader>nt :NERDTreeToggle<CR>
 
-" Ack{
-nmap <leader>a <Esc>:Ack!
-"}
+" Ack {
+  nmap <leader>a <Esc>:Ack!
+" }
 
-" ctrlP{
-" start ctrlP (see http://kien.github.com/ctrlp.vim/)
-nmap <leader>ct :CtrlP<CR>
+" ctrlP {
+  " start ctrlP (see http://kien.github.com/ctrlp.vim/)
+  nmap <leader>ct :CtrlP<CR>
 
-" ctrlP with word under cursor
-nn <silent> <leader>c :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
+  " ctrlP with word under cursor
+  nn <silent> <leader>c :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
 
-" another method of ctrlP with word under cursor. Let's see between the two. But don't activate both !
-"nmap <leader>dd :CtrlP<CR><C-\>w
+  " another method of ctrlP with word under cursor. Let's see between the two. But don't activate both !
+  "nmap <leader>dd :CtrlP<CR><C-\>w
 
-" ctrlP with selected word
-vmap <leader>cw :CtrlP<CR><C-\>c
-"}
+  " ctrlP with selected word
+  vmap <leader>cw :CtrlP<CR><C-\>c
+" }
 
-" MiniBufExplorer{
+" MiniBufExplorer {
   map <Leader>mbt :MBEToggle<cr>
 
   " swich forward buffer(s) in current window
@@ -236,7 +236,7 @@ vmap <leader>cw :CtrlP<CR><C-\>c
 
   " delete current buffer
   nmap <leader>md :MBEbd<CR>
-"}
+" }
 
 " toggle background mode
 call togglebg#map("<F5>")
