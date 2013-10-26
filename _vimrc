@@ -157,9 +157,6 @@ set expandtab
 " autoset syntax highlight according to filetype
 filetype on
 
-" already set when using Vundle, no need to set again
-"filetype plugin on
-
 " allow vim to manage multiple buffers effectively
 set hidden
 
@@ -210,8 +207,9 @@ nnoremap <C-left> <C-w>h
 " or use this, but not both!
 "map <leader>nt :NERDTreeToggle<CR>
 
-" start Ack
+" Ack{
 nmap <leader>a <Esc>:Ack!
+"}
 
 " ctrlP{
 " start ctrlP (see http://kien.github.com/ctrlp.vim/)
