@@ -2,19 +2,19 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
-behave mswin
-
-" On Windows, also use '.vim' instead of 'vimfiles'; this makes
-" synchronization across (heterogeneous) systems easier.
 if has('win32')
-    set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+    source $VIMRUNTIME/vimrc_example.vim
+    source $VIMRUNTIME/mswin.vim
+    behave mswin
 endif
+
+" On Windows, also use '.vim' first instead of 'vimfiles'; this makes
+" synchronization across (heterogeneous) systems easier.
+set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
 
 " Use vundle for easy plugin administration
 " ----- vundle START -----
-filetype off  " required!
+filetype off  " required for Vundle!
 
 if has("gui_running") 
 " If you want gvim portable as well vundle to load from vimfiles,
@@ -31,14 +31,22 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " My bundles start here
+" more colorscheme
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'jnurmine/Zenburn'
+
+" fuzzy file searching
 Bundle 'kien/ctrlp.vim'
+
 " minibufexplorer is more pleasant, use it!
 Bundle 'fholgado/minibufexpl.vim'
 "Bundle 'corntrace/bufexplorer'
+
+" Match coupled tags/parenthesis
 Bundle 'jwhitley/vim-matchit'
+
+" FLEX specific convinience
 Bundle 'hendi235/vim-flex'
-Bundle 'jnurmine/Zenburn'
 
 filetype plugin on    " required!
 filetype indent on    " required!
@@ -96,21 +104,23 @@ endif
 let g:solarized_contrast="normal"
 colorscheme solarized
 
-" Set global font
-set guifont=consolas:h11:cDEFAULT
+if has("gui_running")
+    " Set global font
+    set guifont=consolas:h11:cDEFAULT
 
-" Set toolbar to hidden --> gvim specific
-set guioptions-=T
+    " Set toolbar to hidden --> gvim specific
+    set guioptions-=T
 
-" display horizontal scrollbar at bottom
-set guioptions+=b
+    " display horizontal scrollbar at bottom
+    set guioptions+=b
 
-" try to start gVim in full window size
-au GUIEnter * simalt ~x
+    " try to start gVim in full window size
+    au GUIEnter * simalt ~x
 
-" Set initial windows size (column and lines)
-"set lines=50
-"set columns=120
+    " Set initial windows size (column and lines)
+    "set lines=50
+    "set columns=120
+endif
 
 "Disable virtual bell
 set vb t_vb="
