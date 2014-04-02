@@ -10,7 +10,7 @@ endif
 
 " On Windows, also use '.vim' first instead of 'vimfiles'; this makes
 " synchronization across (heterogeneous) systems easier.
-set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$HOME/.vim/after,$VIM/vimfiles/after
 
 " Use vundle for easy plugin administration
 " ----- vundle START -----
@@ -20,7 +20,8 @@ if has("gui_running")
 " If you want gvim portable as well vundle to load from vimfiles,
 " then you've to edit the $HOME in bundle/vundle/autoload/vundle.vim, too.
 " I won't bother, so let it managed by default in .vim folder.
-  set rtp+=%HOME%/.vim/bundle/vundle/
+  "set rtp+=%HOME%/.vim/bundle/vundle/
+  set rtp+=$HOME/.vim/bundle/vundle/
 else
   set rtp+=~/.vim/bundle/vundle/
 endif
@@ -28,25 +29,25 @@ endif
 call vundle#rc()
 
 " let Vundle manage Vundle. required!
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
 " My bundles start here
 " more colorscheme
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'jnurmine/Zenburn'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'jnurmine/Zenburn'
 
 " fuzzy file searching
-Bundle 'kien/ctrlp.vim'
+Plugin 'kien/ctrlp.vim'
 
 " minibufexplorer is more pleasant, use it!
-Bundle 'fholgado/minibufexpl.vim'
-"Bundle 'corntrace/bufexplorer'
+Plugin 'fholgado/minibufexpl.vim'
+"Plugin 'corntrace/bufexplorer'
 
 " Match coupled tags/parenthesis
-Bundle 'jwhitley/vim-matchit'
+Plugin 'jwhitley/vim-matchit'
 
 " FLEX specific convinience
-Bundle 'hendi235/vim-flex'
+Plugin 'hendi235/vim-flex'
 
 filetype plugin on    " required!
 filetype indent on    " required!
