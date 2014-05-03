@@ -46,6 +46,9 @@ Plugin 'fholgado/minibufexpl.vim'
 " Match coupled tags/parenthesis
 Plugin 'jwhitley/vim-matchit'
 
+" Use silver searcher for search (https://github.com/ggreer/the_silver_searcher)
+Plugin 'rking/ag.vim'
+
 " FLEX specific convinience
 Plugin 'hendi235/vim-flex'
 
@@ -144,8 +147,11 @@ set incsearch
 " ignore case in searching
 set ignorecase
 
-" case-sensitive search if searchword contains uppercase letter
-set smartcase
+" case-sensitive search only if searchword contains uppercase letter
+"set smartcase
+
+" don't wrap searching at the end of file
+set nowrapscan
 
 set smartindent
 
@@ -222,12 +228,16 @@ nnoremap <C-left> <C-w>h
   nmap <leader>a <Esc>:Ack!
 " }
 
+" Ag {
+" note: Remember to install Ag first and can be found in PATH
+" }
+
 " ctrlP {
   " start ctrlP (see http://kien.github.com/ctrlp.vim/)
-  nmap <leader>ct :CtrlP<CR>
+  nmap <leader>cp :CtrlP<CR>
 
   " ctrlP with word under cursor
-  nn <silent> <leader>c :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
+  nn <silent> <leader>cc :let g:ctrlp_default_input = expand('<cword>')<cr>:CtrlP<cr>
 
   " another method of ctrlP with word under cursor. Let's see between the two. But don't activate both !
   "nmap <leader>dd :CtrlP<CR><C-\>w
