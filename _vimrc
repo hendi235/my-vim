@@ -16,7 +16,7 @@ set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$HOME/.vim/after,$VIM/vimfi
 " ----- vundle START -----
 filetype off  " required for Vundle!
 
-if has("gui_running") 
+if has("gui_running")
 " If you want gvim portable as well vundle to load from vimfiles,
 " then you've to edit the $HOME in bundle/vundle/autoload/vundle.vim, too.
 " I won't bother, so let it managed by default in .vim folder.
